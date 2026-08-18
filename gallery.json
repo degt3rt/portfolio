@@ -1,5 +1,5 @@
 {
-  "generatedAt": 1787051490931,
+  "generatedAt": 1787051641662,
   "artist": {
     "name": "Dug",
     "bio": "I am Dug and I rock",
@@ -27,7 +27,8 @@
       "year": 2026,
       "medium": "Water colour",
       "dimensions": "30 × 45 cm",
-      "status": "available"
+      "status": "available",
+      "price": "INR 1200.00"
     }
   ],
   "events": [],
