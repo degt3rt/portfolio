@@ -1,0 +1,42 @@
+{
+  "generatedAt": 1787050326318,
+  "artist": {
+    "name": "Dug",
+    "bio": "I am Dug and I rock",
+    "links": []
+  },
+  "layout": {
+    "grid": "uniformPortrait",
+    "caption": "below",
+    "detail": "sideBySide",
+    "header": "minimal",
+    "titlecase": "asIs"
+  },
+  "works": [
+    {
+      "id": "57c50b6b-d050-4fae-b8bf-45d376fade2a",
+      "title": "Test",
+      "images": [
+        {
+          "id": "87fbe995-14b7-4c40-b7b6-336e203ed088"
+        },
+        {
+          "id": "a23d6f67-9382-4be0-90fd-ef956f8b7264"
+        },
+        {
+          "id": "04e6ef60-35b7-4d55-8e32-b70e296551ad"
+        },
+        {
+          "id": "917b8f82-3dd5-4352-8e50-09916f18bddf"
+        }
+      ],
+      "year": 2026,
+      "medium": "oil",
+      "dimensions": "23 × 16 × 1 cm",
+      "status": "available",
+      "price": "USD 1346.00"
+    }
+  ],
+  "events": [],
+  "links": []
+}
