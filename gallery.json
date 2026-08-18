@@ -1,5 +1,5 @@
 {
-  "generatedAt": 1787050326318,
+  "generatedAt": 1787051490931,
   "artist": {
     "name": "Dug",
     "bio": "I am Dug and I rock",
@@ -14,27 +14,20 @@
   },
   "works": [
     {
-      "id": "57c50b6b-d050-4fae-b8bf-45d376fade2a",
-      "title": "Test",
+      "id": "b93570e2-aa30-4e69-b6ab-48056e78b2ed",
+      "title": "Jungle",
       "images": [
         {
-          "id": "87fbe995-14b7-4c40-b7b6-336e203ed088"
+          "id": "695c5456-a231-4e98-b6f5-e2b8d2b3e69e"
         },
         {
-          "id": "a23d6f67-9382-4be0-90fd-ef956f8b7264"
-        },
-        {
-          "id": "04e6ef60-35b7-4d55-8e32-b70e296551ad"
-        },
-        {
-          "id": "917b8f82-3dd5-4352-8e50-09916f18bddf"
+          "id": "2fdf7404-106e-4b70-8ab9-da25a76ff0a7"
         }
       ],
       "year": 2026,
-      "medium": "oil",
-      "dimensions": "23 × 16 × 1 cm",
-      "status": "available",
-      "price": "USD 1346.00"
+      "medium": "Water colour",
+      "dimensions": "30 × 45 cm",
+      "status": "available"
     }
   ],
   "events": [],
