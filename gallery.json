@@ -1,5 +1,5 @@
 {
-  "generatedAt": 1787203280631,
+  "generatedAt": 1787214515732,
   "artist": {
     "name": "Dug",
     "bio": "I am Dug and I rock",
@@ -27,8 +27,47 @@
       "year": 2026,
       "medium": "Poster colour",
       "dimensions": "30 × 45 cm",
-      "status": "available",
-      "price": "INR 1200.00"
+      "status": "not-for-sale"
+    },
+    {
+      "id": "07e32177-ed2f-4914-86a9-1b64ea6e8ed1",
+      "title": "Water Fun",
+      "images": [
+        {
+          "id": "30a9253a-845b-4beb-8bb3-ff4e85649d52"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "6d66a86c-c979-483e-b5d8-5e3d27fc9988",
+      "title": "Beauty",
+      "images": [
+        {
+          "id": "1dd26196-8bbf-4a00-98b0-59c21f03e9e0"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "03cb8762-e856-4cd8-8f74-c8e27563604b",
+      "title": "Be Happy",
+      "images": [
+        {
+          "id": "e4f20147-3626-4155-93e5-4e1bf8bbdbfd"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "1e81705c-1afe-440c-971f-2cdf2be11f85",
+      "title": "Yum",
+      "images": [
+        {
+          "id": "ed069021-22a6-45ce-b0c9-d44eacdc98fc"
+        }
+      ],
+      "year": 2025
     }
   ],
   "events": [],
