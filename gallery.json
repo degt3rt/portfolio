@@ -1,17 +1,17 @@
 {
-  "generatedAt": 1787502053764,
+  "generatedAt": 1787502232590,
   "artist": {
     "name": "Dug",
     "bio": "I am Dug and I rock",
     "links": []
   },
   "layout": {
-    "grid": "uniformPortrait",
+    "grid": "uniformSquare",
     "caption": "below",
-    "detail": "sideBySide",
-    "header": "minimal",
+    "detail": "stacked",
+    "header": "centered",
     "titlecase": "asIs",
-    "template": "classic"
+    "template": "studioCards"
   },
   "works": [
     {
