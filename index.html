@@ -17,6 +17,12 @@
   (grid -> #/work/<id> -> prev/next), state derived from location.hash so
   browser back/forward and direct links Just Work. v2 adds the #/events
   section (Works | Events & Courses nav) driven by gallery.json "events".
+  v3 adds structural templates: body[data-template] switches between
+  classic (default), atelier (hero + editorial grid), darkroom (sticky
+  bar, hover captions), index (numbered list rows), studioCards (avatar/
+  monogram header, status badges). Template CSS below; structural JS in
+  the renderer keys off the same attribute.
+
 -->
 <html lang="en">
 <head>
@@ -186,13 +192,126 @@
   footer { text-align: center; color: var(--text-muted); font-size: .85em; padding: 24px 0 36px; }
   .hidden { display: none !important; }
   .status { text-align: center; color: var(--text-muted); padding: 40px 0; }
+
+  /* ================= structural templates (body[data-template]) ======
+     Each block restyles the SAME markup the classic renderer produces;
+     extra elements (hero, avatar, list rows) are rendered only when the
+     template needs them (JS checks data-template). */
+
+  /* ---------- atelier: editorial, hero artwork, catalogue captions --- */
+  body[data-template="atelier"] header h1 { font-size: calc(2.6em * var(--scale)); }
+  body[data-template="atelier"] .bio { font-style: italic; }
+  body[data-template="atelier"] .work { box-shadow: none; background: none; }
+  body[data-template="atelier"] .work .cap { padding: 10px 2px 0; }
+  body[data-template="atelier"] .work .cap .t { font-style: italic; }
+  body[data-template="atelier"] .work img { aspect-ratio: 4 / 3; }
+  .hero { margin: 8px 0 26px; cursor: pointer; grid-column: 1 / -1; }
+  .hero img { width: 100%; max-height: 60vh; object-fit: cover; display: block; border-radius: var(--radius); }
+  .hero .herocap { margin-top: 10px; color: var(--text-muted); font-size: .92em; }
+  .hero .herocap .t { color: var(--text); font-style: italic; }
+
+  /* ---------- darkroom: sticky bar, masonry, hover captions --------- */
+  body[data-template="darkroom"] header {
+    position: sticky; top: 0; z-index: 2; text-align: left;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(6px); border-bottom: 1px solid var(--surface);
+    padding: 14px 20px; display: flex; align-items: baseline;
+    gap: 22px; flex-wrap: wrap;
+  }
+  body[data-template="darkroom"] header h1 {
+    font-size: calc(1.05em * var(--scale)); letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+  body[data-template="darkroom"] header .bio { display: none; }
+  body[data-template="darkroom"] nav.links { margin: 0 0 0 auto; }
+  body[data-template="darkroom"] nav.sections { margin: 0; border: 0; padding: 0; }
+  body[data-template="darkroom"] nav.sections a { border: 0; padding: 0 4px; text-transform: uppercase; font-size: .82em; color: var(--text-muted); background: none; }
+  body[data-template="darkroom"] nav.sections a.current { color: var(--text); background: none; }
+  body[data-template="darkroom"] .grid { display: block; columns: var(--grid-cols); column-gap: var(--gap); }
+  body[data-template="darkroom"] .work { position: relative; margin: 0 0 var(--gap); break-inside: avoid; box-shadow: none; }
+  body[data-template="darkroom"] .work img { aspect-ratio: auto; }
+  body[data-template="darkroom"] .work .cap {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 12px 10px;
+    background: linear-gradient(transparent, rgba(0,0,0,.78));
+    opacity: 0; transition: opacity .18s; color: #fff;
+  }
+  body[data-template="darkroom"] .work:hover .cap,
+  body[data-template="darkroom"] .work:focus-visible .cap { opacity: 1; }
+  body[data-template="darkroom"] .work .cap .y { color: #b9b9c2; }
+  @media (max-width: 900px) { body[data-template="darkroom"] .grid { columns: 2; } }
+  @media (max-width: 520px) { body[data-template="darkroom"] .grid { columns: 1; } }
+
+  /* ---------- index: numbered list rows ------------------------------ */
+  body[data-template="index"] header { border-bottom: 3px solid var(--text); padding-bottom: 14px; }
+  body[data-template="index"] header h1 {
+    font-size: calc(2.8em * var(--scale)); text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+  body[data-template="index"] nav.sections a { border-radius: 0; border-color: var(--text); }
+  body[data-template="index"] nav.sections a.current { background: var(--text); border-color: var(--text); color: var(--bg); }
+  body[data-template="index"] .grid { display: block; }
+  body[data-template="index"] .work.row {
+    display: grid; grid-template-columns: 3.2em 1fr 200px; gap: 18px;
+    align-items: center; padding: 16px 0; margin: 0;
+    border-bottom: 1px solid var(--text-muted); border-radius: 0;
+    background: none; box-shadow: none; overflow: visible;
+  }
+  body[data-template="index"] .work.row:hover { background: var(--surface); }
+  @media (max-width: 620px) { body[data-template="index"] .work.row { grid-template-columns: 2.4em 1fr 96px; } }
+  body[data-template="index"] .work.row .no { color: var(--text-muted); }
+  body[data-template="index"] .work.row .cap { padding: 0; }
+  body[data-template="index"] .work.row .cap .t { text-transform: uppercase; }
+  body[data-template="index"] .work.row img { aspect-ratio: 16 / 10; border-radius: 0; }
+  body[data-template="index"] .work.row .noimg { aspect-ratio: 16 / 10; }
+
+  /* ---------- studioCards: rounded cards, avatar, badges ------------- */
+  body[data-template="studioCards"] header {
+    display: flex; gap: 22px; align-items: center; text-align: left;
+    max-width: 1100px; margin: 0 auto; flex-wrap: wrap;
+  }
+  body[data-template="studioCards"] header .headbody { flex: 1; min-width: 240px; }
+  body[data-template="studioCards"] header .bio { margin-left: 0; }
+  .avatar {
+    width: 88px; height: 88px; border-radius: 50%; flex: 0 0 auto;
+    object-fit: cover; display: none;
+  }
+  .avatar.mono {
+    display: none; align-items: center; justify-content: center;
+    background: var(--accent); color: var(--bg);
+    font-family: var(--font-heading); font-size: 2em;
+    font-weight: var(--heading-weight);
+  }
+  body[data-template="studioCards"] .avatar { display: block; }
+  body[data-template="studioCards"] .avatar.mono { display: flex; }
+  body[data-template="studioCards"] nav.links a {
+    background: var(--surface); padding: 5px 14px; border-radius: 999px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12);
+  }
+  body[data-template="studioCards"] .work {
+    border-radius: 18px; box-shadow: 0 2px 10px rgba(0,0,0,.10);
+    transition: transform .15s;
+  }
+  body[data-template="studioCards"] .work:hover { transform: translateY(-3px); }
+  body[data-template="studioCards"] .work .cap { padding: 12px 16px 15px; }
+  .work .cap .gbadge {
+    display: none; background: var(--accent); color: var(--bg);
+    font-size: .72em; border-radius: 999px; padding: 2px 10px;
+    margin-top: 7px;
+  }
+  body[data-template="studioCards"] .work .cap .gbadge { display: inline-block; }
 </style>
 </head>
 <body>
 <header>
+  <!-- Avatar renders only for studioCards: photo when the artist opted
+       in (gallery.json artist.avatar), else a monogram circle. -->
+  <img class="avatar hidden" id="avatar" alt="" />
+  <div class="avatar mono hidden" id="avatar-mono" aria-hidden="true"></div>
+  <div class="headbody">
   <h1 id="artist-name"></h1>
   <p class="bio" id="artist-bio"></p>
   <nav class="links" id="artist-links"></nav>
+  </div>
   <!-- Section nav renders only when gallery.json has a non-empty events
        array; a works-only site looks exactly like before. -->
   <nav class="sections hidden" id="sections">
@@ -229,10 +348,30 @@
   }
 
   /* ---------- header ---------- */
+  function template() {
+    return document.body.getAttribute("data-template") || "classic";
+  }
+
   function renderHeader(artist) {
     document.getElementById("artist-name").textContent = artist.name || "";
     document.getElementById("artist-bio").textContent = artist.bio || "";
     if (artist.name) document.title = artist.name;
+    if (template() === "studioCards") {
+      /* avatar file name is a fixed constant published by the app; only
+         its PRESENCE comes from gallery.json, never a free-form path. */
+      if (artist.avatar === true) {
+        var av = document.getElementById("avatar");
+        av.src = "images/avatar.jpg";
+        av.classList.remove("hidden");
+      } else {
+        var initials = (artist.name || "").split(/\s+/)
+          .map(function (p) { return p.charAt(0); })
+          .slice(0, 2).join("").toUpperCase();
+        var mono = document.getElementById("avatar-mono");
+        mono.textContent = initials || "\u25cf";
+        mono.classList.remove("hidden");
+      }
+    }
     var nav = document.getElementById("artist-links");
     (artist.links || []).forEach(function (l) {
       if (typeof l.url !== "string" || !/^https:\/\//.test(l.url)) return;
@@ -247,30 +386,92 @@
   }
 
   /* ---------- grid ---------- */
+  /* Builds one card; `num` (1-based) is used by the index template. */
+  function workCard(w, num) {
+    var isIndex = template() === "index";
+    var card = el("button", isIndex ? "work row" : "work");
+    card.type = "button";
+    card.setAttribute("aria-label", w.title || "Artwork");
+
+    function thumb() {
+      var primary = (w.images || [])[0];
+      if (!primary) return el("div", "noimg");
+      var img = document.createElement("img");
+      img.loading = "lazy";
+      img.alt = w.title || "";
+      img.src = "images/" + encodeURIComponent(primary.id) + "_t.jpg";
+      return img;
+    }
+
+    var cap = el("div", "cap");
+    cap.appendChild(el("div", "t", w.title || ""));
+    var meta = [];
+    if (w.medium) meta.push(w.medium);
+    if (w.year) meta.push(w.year);
+    if (isIndex || template() === "atelier") {
+      /* catalogue caption: medium · year */
+      if (meta.length) cap.appendChild(el("div", "y", meta.join(" \u00b7 ")));
+    } else if (w.year) {
+      cap.appendChild(el("div", "y", w.year));
+    }
+    if (template() === "studioCards") {
+      var badge = [];
+      if (w.status) badge.push(w.status);
+      if (w.price) badge.push(w.price);
+      if (badge.length) {
+        cap.appendChild(el("span", "gbadge", badge.join(" \u00b7 ")));
+      }
+    }
+
+    if (isIndex) {
+      card.appendChild(el("div", "no",
+        (num < 10 ? "0" : "") + num));
+      card.appendChild(cap);
+      card.appendChild(thumb());
+    } else {
+      card.appendChild(thumb());
+      card.appendChild(cap);
+    }
+    card.addEventListener("click", function () {
+      location.hash = "#/work/" + encodeURIComponent(w.id);
+    });
+    return card;
+  }
+
   function renderGrid(works) {
     gridEl.textContent = "";
-    works.forEach(function (w) {
-      var card = el("button", "work");
-      card.type = "button";
-      card.setAttribute("aria-label", w.title || "Artwork");
-      var primary = (w.images || [])[0];
-      if (primary) {
+    /* atelier: hero = first featured work (fallback: first work with an
+       image). Hero work stays in the grid too — it is a highlight, not
+       a removal. */
+    if (template() === "atelier" && works.length) {
+      var hero = works.find(function (w) { return w.featured === true; })
+        || works[0];
+      var hImg = (hero.images || [])[0];
+      if (hImg) {
+        var fig = el("figure", "hero");
         var img = document.createElement("img");
-        img.loading = "lazy";
-        img.alt = w.title || "";
-        img.src = "images/" + encodeURIComponent(primary.id) + "_t.jpg";
-        card.appendChild(img);
-      } else {
-        card.appendChild(el("div", "noimg"));
+        img.alt = hero.title || "";
+        img.src = "images/" + encodeURIComponent(hImg.id) + "_d.jpg";
+        fig.appendChild(img);
+        var hc = el("figcaption", "herocap");
+        hc.appendChild(el("span", "t", hero.title || ""));
+        var hMeta = [];
+        if (hero.medium) hMeta.push(hero.medium);
+        if (hero.dimensions) hMeta.push(hero.dimensions);
+        if (hero.year) hMeta.push(hero.year);
+        if (hMeta.length) {
+          hc.appendChild(document.createTextNode(
+            " \u2014 " + hMeta.join(", ")));
+        }
+        fig.appendChild(hc);
+        fig.addEventListener("click", function () {
+          location.hash = "#/work/" + encodeURIComponent(hero.id);
+        });
+        gridEl.appendChild(fig);
       }
-      var cap = el("div", "cap");
-      cap.appendChild(el("div", "t", w.title || ""));
-      if (w.year) cap.appendChild(el("div", "y", w.year));
-      card.appendChild(cap);
-      card.addEventListener("click", function () {
-        location.hash = "#/work/" + encodeURIComponent(w.id);
-      });
-      gridEl.appendChild(card);
+    }
+    works.forEach(function (w, i) {
+      gridEl.appendChild(workCard(w, i + 1));
     });
   }
 
@@ -540,17 +741,18 @@
     })
     .then(function (data) {
       DATA = data;
-      renderHeader(data.artist || {});
-      /* Apply layout tokens the theme compiler put in gallery.json (the
-         data- switches; colors/fonts arrive via theme.css). Values are
-         constrained to [a-zA-Z]+ — anything else is ignored. */
+      /* Apply layout tokens FIRST — renderHeader/renderGrid read
+         data-template. Values are constrained to [a-zA-Z]+; anything
+         else is ignored (colors/fonts arrive via theme.css). */
       var layout = data.layout || {};
-      ["grid", "caption", "detail", "header", "titlecase"].forEach(function (k) {
-        var v = layout[k];
-        if (typeof v === "string" && /^[a-zA-Z]+$/.test(v)) {
-          document.body.setAttribute("data-" + k, v);
-        }
-      });
+      ["grid", "caption", "detail", "header", "titlecase", "template"]
+        .forEach(function (k) {
+          var v = layout[k];
+          if (typeof v === "string" && /^[a-zA-Z]+$/.test(v)) {
+            document.body.setAttribute("data-" + k, v);
+          }
+        });
+      renderHeader(data.artist || {});
       renderGrid(data.works || []);
       /* Sections: render once; each tab appears only when its array is
          non-empty, and the nav itself shows when ANY section exists. */

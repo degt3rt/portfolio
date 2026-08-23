@@ -1,5 +1,5 @@
 {
-  "generatedAt": 1787214515732,
+  "generatedAt": 1787502053764,
   "artist": {
     "name": "Dug",
     "bio": "I am Dug and I rock",
@@ -10,7 +10,8 @@
     "caption": "below",
     "detail": "sideBySide",
     "header": "minimal",
-    "titlecase": "asIs"
+    "titlecase": "asIs",
+    "template": "classic"
   },
   "works": [
     {
