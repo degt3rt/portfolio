@@ -668,7 +668,10 @@
     linksEl.textContent = "";
     /* Group by label, preserving array order (app sorts label, name). */
     var groups = [];
-    var byLabel = {};
+    /* Null prototype: a label named "__proto__" or "constructor" must be
+       a plain key, not a collision with Object.prototype (a hand-edited
+       gallery.json could otherwise kill the whole render). */
+    var byLabel = Object.create(null);
     links.forEach(function (l) {
       var key = l.label || "";
       if (!(key in byLabel)) {

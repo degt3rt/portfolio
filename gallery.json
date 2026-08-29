@@ -1,8 +1,8 @@
 {
-  "generatedAt": 1787502232590,
+  "generatedAt": 1788005655742,
   "artist": {
-    "name": "Dug",
-    "bio": "I am Dug and I rock",
+    "name": "",
+    "bio": "",
     "links": []
   },
   "layout": {
@@ -11,61 +11,56 @@
     "detail": "stacked",
     "header": "centered",
     "titlecase": "asIs",
-    "template": "studioCards"
+    "template": "classic"
   },
   "works": [
     {
-      "id": "b93570e2-aa30-4e69-b6ab-48056e78b2ed",
-      "title": "Jungle",
+      "id": "287d058a-af16-40ed-9337-28cfed2662fd",
+      "title": "Forest",
       "images": [
         {
-          "id": "695c5456-a231-4e98-b6f5-e2b8d2b3e69e"
-        },
-        {
-          "id": "2fdf7404-106e-4b70-8ab9-da25a76ff0a7"
+          "id": "208d76cd-1c70-4cb8-a14d-69fd86ae6f83"
         }
       ],
       "year": 2026,
-      "medium": "Poster colour",
-      "dimensions": "30 × 45 cm",
-      "status": "not-for-sale"
+      "featured": true
     },
     {
-      "id": "07e32177-ed2f-4914-86a9-1b64ea6e8ed1",
-      "title": "Water Fun",
-      "images": [
-        {
-          "id": "30a9253a-845b-4beb-8bb3-ff4e85649d52"
-        }
-      ],
-      "year": 2025
-    },
-    {
-      "id": "6d66a86c-c979-483e-b5d8-5e3d27fc9988",
-      "title": "Beauty",
-      "images": [
-        {
-          "id": "1dd26196-8bbf-4a00-98b0-59c21f03e9e0"
-        }
-      ],
-      "year": 2025
-    },
-    {
-      "id": "03cb8762-e856-4cd8-8f74-c8e27563604b",
-      "title": "Be Happy",
-      "images": [
-        {
-          "id": "e4f20147-3626-4155-93e5-4e1bf8bbdbfd"
-        }
-      ],
-      "year": 2025
-    },
-    {
-      "id": "1e81705c-1afe-440c-971f-2cdf2be11f85",
+      "id": "12a70885-589c-45e4-94c3-b6c360844e11",
       "title": "Yum",
       "images": [
         {
-          "id": "ed069021-22a6-45ce-b0c9-d44eacdc98fc"
+          "id": "07f09b8b-7b8c-4a18-9258-1895e06767a3"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "4397db03-a344-4cf4-8e45-85575f4243e4",
+      "title": "Beauty",
+      "images": [
+        {
+          "id": "fc5277f9-7813-40cc-abcc-967564d8a266"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "3bf4a2ba-ae94-45c0-a0b7-4c5ee76f3e70",
+      "title": "Be Happy",
+      "images": [
+        {
+          "id": "bd259df2-3083-4c92-aefd-f9faee8f07b8"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "a6b2d1c4-d50a-4a89-9b15-f13fb1f4b323",
+      "title": "Water is Fun",
+      "images": [
+        {
+          "id": "02acf8d0-8ec0-4e26-ab49-cc4df0c54a9b"
         }
       ],
       "year": 2025
