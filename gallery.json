@@ -1,7 +1,7 @@
 {
-  "generatedAt": 1788005655742,
+  "generatedAt": 1788062211445,
   "artist": {
-    "name": "",
+    "name": "Aaru Art Gallery",
     "bio": "",
     "links": []
   },
@@ -61,6 +61,26 @@
       "images": [
         {
           "id": "02acf8d0-8ec0-4e26-ab49-cc4df0c54a9b"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "415eb372-84c9-4b3b-90db-a7b5a980f98d",
+      "title": "Sookha Ped",
+      "images": [
+        {
+          "id": "f27de4af-d7db-46e6-ab04-a107e159c837"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "cde97c87-0db2-4b7b-9981-c2cf6fad71a9",
+      "title": "Happy Birthday Mumma",
+      "images": [
+        {
+          "id": "5f8d0519-fa9b-4b0b-ae44-b4b2834b264f"
         }
       ],
       "year": 2025
