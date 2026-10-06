@@ -1,5 +1,5 @@
 {
-  "generatedAt": 1791290262153,
+  "generatedAt": 1791290822426,
   "artist": {
     "name": "Aaru Art Gallery",
     "bio": "",
@@ -9,10 +9,10 @@
   "layout": {
     "grid": "uniformSquare",
     "caption": "below",
-    "detail": "stacked",
-    "header": "centered",
+    "detail": "sideBySide",
+    "header": "leftAligned",
     "titlecase": "asIs",
-    "template": "classic"
+    "template": "atelier"
   },
   "works": [
     {
