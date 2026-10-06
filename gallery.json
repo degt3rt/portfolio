@@ -1,8 +1,9 @@
 {
-  "generatedAt": 1788062211445,
+  "generatedAt": 1791290262153,
   "artist": {
     "name": "Aaru Art Gallery",
     "bio": "",
+    "avatar": true,
     "links": []
   },
   "layout": {
