@@ -1,5 +1,5 @@
 {
-  "generatedAt": 1791633331280,
+  "generatedAt": 1791633420363,
   "artist": {
     "name": "Aaru Art Gallery",
     "bio": "I am a child Artist. I paint forests, dreams and everything in between. Colours first, rules later.",
@@ -12,10 +12,10 @@
     ]
   },
   "layout": {
-    "grid": "uniformPortrait",
+    "grid": "uniformSquare",
     "caption": "below",
-    "detail": "sideBySide",
-    "header": "minimal",
+    "detail": "stacked",
+    "header": "centered",
     "titlecase": "asIs",
     "template": "nocturne"
   },
