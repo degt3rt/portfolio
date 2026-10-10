@@ -1,8 +1,8 @@
 {
-  "generatedAt": 1791636410871,
+  "generatedAt": 1791637281527,
   "artist": {
     "name": "Aaru Art Gallery",
-    "bio": "I am a child Artist. I paint forests, dreams and everything in between. Colours first, rules later.",
+    "bio": "I am a child Artist. I paint forests to dreams and everything in between. Colours first rules later.",
     "avatar": true,
     "links": [
       {
@@ -17,89 +17,69 @@
     "detail": "stacked",
     "header": "centered",
     "titlecase": "asIs",
-    "template": "folio"
+    "template": "salon"
   },
   "works": [
     {
-      "id": "287d058a-af16-40ed-9337-28cfed2662fd",
-      "title": "Forest",
+      "id": "77b5e3d4-a449-4066-93c6-3f7b49b3c466",
+      "title": "Dreams",
       "images": [
         {
-          "id": "208d76cd-1c70-4cb8-a14d-69fd86ae6f83"
+          "id": "11be44c2-3679-4069-8bb9-a8f420380257"
+        }
+      ],
+      "year": 2026,
+      "featured": true
+    },
+    {
+      "id": "fde3076f-2739-47e5-b0eb-119fd6561581",
+      "title": "Sookha Ped",
+      "images": [
+        {
+          "id": "df6be920-9578-43dc-84be-bcf3838a98f3"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "241f01b3-ee4a-4866-9b68-740831ea8e13",
+      "title": "Happy Birthday Mumma",
+      "images": [
+        {
+          "id": "a5ee598c-f8d4-41ba-9cf2-7b943436c59a"
         }
       ],
       "year": 2026
     },
     {
-      "id": "12a70885-589c-45e4-94c3-b6c360844e11",
+      "id": "0fdb612a-4c3d-4446-b338-b919f3d1676b",
+      "title": "Forest",
+      "images": [
+        {
+          "id": "28f1348c-3186-4195-826f-a2b096a1e594"
+        }
+      ],
+      "year": 2025
+    },
+    {
+      "id": "c19ef9a7-241a-4ae2-b72f-14401899077e",
       "title": "Yum",
       "images": [
         {
-          "id": "07f09b8b-7b8c-4a18-9258-1895e06767a3"
+          "id": "f59d274e-c392-49c3-a348-e5ceed685486"
         }
       ],
       "year": 2025
     },
     {
-      "id": "4397db03-a344-4cf4-8e45-85575f4243e4",
-      "title": "Beauty",
+      "id": "cc852ad7-1f16-4d9f-bfc3-74933957c7f3",
+      "title": "Water is fun",
       "images": [
         {
-          "id": "fc5277f9-7813-40cc-abcc-967564d8a266"
+          "id": "34cf3fbf-f40e-41c7-97f0-ebaf57e56137"
         }
       ],
       "year": 2025
-    },
-    {
-      "id": "3bf4a2ba-ae94-45c0-a0b7-4c5ee76f3e70",
-      "title": "Be Happy",
-      "images": [
-        {
-          "id": "bd259df2-3083-4c92-aefd-f9faee8f07b8"
-        }
-      ],
-      "year": 2025
-    },
-    {
-      "id": "a6b2d1c4-d50a-4a89-9b15-f13fb1f4b323",
-      "title": "Water is Fun",
-      "images": [
-        {
-          "id": "02acf8d0-8ec0-4e26-ab49-cc4df0c54a9b"
-        }
-      ],
-      "year": 2025
-    },
-    {
-      "id": "415eb372-84c9-4b3b-90db-a7b5a980f98d",
-      "title": "Sookha Ped",
-      "images": [
-        {
-          "id": "f27de4af-d7db-46e6-ab04-a107e159c837"
-        }
-      ],
-      "year": 2025
-    },
-    {
-      "id": "cde97c87-0db2-4b7b-9981-c2cf6fad71a9",
-      "title": "Happy Birthday Mumma",
-      "images": [
-        {
-          "id": "5f8d0519-fa9b-4b0b-ae44-b4b2834b264f"
-        }
-      ],
-      "year": 2025
-    },
-    {
-      "id": "204720af-79a8-467c-b4bc-181adf9a1c99",
-      "title": "Dreams",
-      "images": [
-        {
-          "id": "0e01eee1-3a40-45af-87ce-8612705125b0"
-        }
-      ],
-      "year": 2026,
-      "featured": true
     }
   ],
   "events": [],

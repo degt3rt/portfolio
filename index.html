@@ -28,6 +28,11 @@
   folio (bold catalogue: oversized masthead, duotone portrait, spec
   tables). Contact links render only when gallery.json ships them
   (publishLinks opt-in in the app).
+  v5 (2026-10): featured works pin to the top of the published grid
+  (the app emits works featured-first), and the visitor sort bar
+  re-orders the grid by year / medium / size / price using the numeric
+  areaCm2 / priceMinor keys — curated order stays the default and the
+  hero never moves.
 
 -->
 <html lang="en">
@@ -139,6 +144,18 @@
   .links li a:hover { text-decoration: underline; }
   .links li a::after { content: "\2197"; color: var(--text-muted); float: right; }
   .links li .host { color: var(--text-muted); font-size: .85em; margin-left: 8px; }
+
+  /* ---------- visitor sort bar ---------- */
+  .sortbar {
+    display: flex; justify-content: flex-end; margin-bottom: 12px;
+    color: var(--text-muted); font-size: .9em;
+  }
+  .sortbar label { display: inline-flex; align-items: center; gap: 8px; }
+  .sortbar select {
+    font: inherit; color: var(--text); background: var(--surface);
+    border: 1px solid var(--text-muted); border-radius: var(--radius);
+    padding: 4px 8px;
+  }
 
   /* ---------- grid ---------- */
   main { max-width: 1100px; margin: 0 auto; padding: 18px 20px 60px; }
@@ -684,6 +701,9 @@
 </header>
 <main>
   <div class="status" id="status">Loading…</div>
+  <!-- Visitor sort bar: built by JS only when there are 2+ works and at
+       least one carries a sortable field (year/medium/areaCm2/priceMinor). -->
+  <div class="sortbar hidden" id="sortbar"></div>
   <div class="grid hidden" id="grid"></div>
   <div class="detail hidden" id="detail"></div>
   <div class="events hidden" id="events"></div>
@@ -701,6 +721,7 @@
   var eventsEl = document.getElementById("events");
   var linksEl = document.getElementById("links");
   var sectionsEl = document.getElementById("sections");
+  var sortbarEl = document.getElementById("sortbar");
 
   function el(tag, cls, text) {
     var n = document.createElement(tag);
@@ -949,17 +970,108 @@
     return card;
   }
 
+  /* ---------- visitor sort (2026-10) ---------- */
+  /* The app publishes works in CURATED order (featured first, then the
+     artist's manual order). The sort bar lets VISITORS re-order the grid
+     by year / medium / size / price without touching that curation —
+     "Curated order" restores it. Rules, kept deliberately simple:
+       - works missing the chosen field sink to the END;
+       - ties keep the curated relative order (Array.sort is stable);
+       - the atelier/salon hero is NOT affected: the featured work stays
+         the artist's spotlight under every visitor sort (renderGrid
+         picks it from the curated WORKS, never the sorted view).
+     Sort keys ship in gallery.json: year/medium as displayed, plus the
+     app's numeric areaCm2 (cm²) / priceMinor (minor units) — both
+     already public information, just machine-comparable. */
+  var WORKS = [];
+  var currentSort = "curated";
+  var SORT_AVAILABLE = false;
+
+  var SORTS = [
+    ["curated", "Curated order"],
+    ["year-desc", "Newest first"],
+    ["year-asc", "Oldest first"],
+    ["medium", "Medium A\u2013Z"],
+    ["size-desc", "Largest first"],
+    ["price-desc", "Price: high to low"],
+    ["price-asc", "Price: low to high"]
+  ];
+
+  /* Numbers only from validated JSON — a hand-edited gallery.json with
+     a string in a numeric slot sorts as "missing", never NaN-chaos. */
+  function num(v) { return typeof v === "number" && isFinite(v) ? v : null; }
+
+  function sortValue(w) {
+    switch (currentSort) {
+      case "year-desc": case "year-asc": return num(w.year);
+      case "size-desc": return num(w.areaCm2);
+      case "price-desc": case "price-asc": return num(w.priceMinor);
+      case "medium":
+        return w.medium ? String(w.medium).toLowerCase() : null;
+      default: return null;
+    }
+  }
+
+  function sortedWorks() {
+    if (currentSort === "curated") return WORKS;
+    var ascending = currentSort === "year-asc" ||
+      currentSort === "price-asc" || currentSort === "medium";
+    var out = WORKS.slice();
+    out.sort(function (a, b) {
+      var av = sortValue(a), bv = sortValue(b);
+      if (av === null && bv === null) return 0;
+      if (av === null) return 1;  /* missing sinks to the end */
+      if (bv === null) return -1;
+      if (av === bv) return 0;    /* stable: curated order breaks ties */
+      if (currentSort === "medium") {
+        return String(av).localeCompare(String(bv));
+      }
+      return (av < bv ? -1 : 1) * (ascending ? 1 : -1);
+    });
+    return out;
+  }
+
+  /* Builds the bar only when sorting could ever change something:
+     2+ works AND at least one sortable field present. Fixed strings
+     only — no gallery.json text touches these nodes. */
+  function buildSortBar() {
+    if (WORKS.length < 2) return;
+    var sortable = WORKS.some(function (w) {
+      return num(w.year) !== null || !!w.medium ||
+        num(w.areaCm2) !== null || num(w.priceMinor) !== null;
+    });
+    if (!sortable) return;
+    var label = el("label", null, "Sort: ");
+    var select = document.createElement("select");
+    select.id = "sort-select";
+    SORTS.forEach(function (pair) {
+      var opt = document.createElement("option");
+      opt.value = pair[0];
+      opt.textContent = pair[1];
+      select.appendChild(opt);
+    });
+    select.addEventListener("change", function () {
+      currentSort = select.value;
+      renderGrid(sortedWorks());
+    });
+    label.appendChild(select);
+    sortbarEl.appendChild(label);
+    SORT_AVAILABLE = true;
+  }
+
   function renderGrid(works) {
     gridEl.textContent = "";
-    /* atelier & salon: hero = first featured work (fallback: first work
-       with an image). The hero STANDS IN FOR that work — it is not
-       repeated as a grid card underneath (the duplication read as a bug).
-       salon adds a museum-label status chip under the hero caption. */
+    /* atelier & salon: hero = first featured work IN CURATED ORDER
+       (fallback: first work with an image) — a visitor's sort never
+       moves the artist's spotlight. The hero STANDS IN FOR that work —
+       it is not repeated as a grid card underneath (the duplication
+       read as a bug). salon adds a museum-label status chip under the
+       hero caption. */
     var heroId = null;
     var wantsHero = template() === "atelier" || template() === "salon";
     if (wantsHero && works.length) {
-      var hero = works.find(function (w) { return w.featured === true; })
-        || works[0];
+      var hero = WORKS.find(function (w) { return w.featured === true; })
+        || WORKS[0];
       var hImg = (hero.images || [])[0];
       if (hImg) {
         heroId = hero.id;
@@ -1243,6 +1355,7 @@
         current.index = 0;
         renderDetail(work);
         gridEl.classList.add("hidden");
+        sortbarEl.classList.add("hidden");
         eventsEl.classList.add("hidden");
         linksEl.classList.add("hidden");
         detailEl.classList.remove("hidden");
@@ -1252,6 +1365,9 @@
     }
     detailEl.classList.add("hidden");
     gridEl.classList.toggle("hidden", onSection);
+    /* The sort bar follows the works grid: hidden on Events/Links, and
+       never shown at all when nothing on the site is sortable. */
+    sortbarEl.classList.toggle("hidden", onSection || !SORT_AVAILABLE);
     eventsEl.classList.toggle("hidden", !onEvents);
     linksEl.classList.toggle("hidden", !onLinks);
     document.getElementById("tab-works").classList
@@ -1283,7 +1399,9 @@
           }
         });
       renderHeader(data.artist || {});
-      renderGrid(data.works || []);
+      WORKS = data.works || [];
+      buildSortBar();
+      renderGrid(sortedWorks());
       /* Sections: render once; each tab appears only when its array is
          non-empty, and the nav itself shows when ANY section exists. */
       var events = data.events || [];
