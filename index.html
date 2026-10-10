@@ -69,7 +69,11 @@
   /* ---------- header ---------- */
   header { padding: calc(28px * var(--scale)) 20px 10px; text-align: center; }
   body[data-header="leftAligned"] header { text-align: left; max-width: 1100px; margin: 0 auto; }
-  body[data-header="minimal"] header .bio { display: none; }
+  /* 2026-10: the bio is NEVER hidden by a design choice. The old
+     data-header="minimal" rule (and darkroom's) display:none'd it —
+     a palette could silently erase the artist's bio (reported live).
+     The token stays valid for stored themes; it just no longer hides
+     anything. */
   header h1 { margin: 0 0 4px; font-size: calc(1.9em * var(--scale)); }
   header .bio { max-width: 46em; margin: 6px auto 0; color: var(--text-muted); }
   body[data-header="leftAligned"] header .bio { margin-left: 0; }
@@ -227,7 +231,9 @@
     font-size: calc(1.05em * var(--scale)); letter-spacing: .22em;
     text-transform: uppercase;
   }
-  body[data-template="darkroom"] header .bio { display: none; }
+  /* darkroom keeps its compact bar, but the bio stays visible (see the
+     note at data-header="minimal" — no design may hide the bio). */
+  body[data-template="darkroom"] header .bio { font-size: .85em; margin: 0; }
   body[data-template="darkroom"] nav.links { margin: 0 0 0 auto; }
   body[data-template="darkroom"] nav.sections { margin: 0; border: 0; padding: 0; }
   body[data-template="darkroom"] nav.sections a { border: 0; padding: 0 4px; text-transform: uppercase; font-size: .82em; color: var(--text-muted); background: none; }
@@ -327,6 +333,26 @@
     --line: color-mix(in srgb, var(--text-muted) 32%, transparent);
   }
 
+  /* ---------- per-artwork info panel (2026-10) ----------------------
+     Every card in the v4 templates carries ALL user-supplied info in a
+     distinct panel INSIDE the artwork's frame: description plus a
+     spec table (Year, Medium, Dimensions, Technique, Series, Price).
+     Status stays a visual chip (pill/stamp) per template. */
+  .infopanel { text-align: left; }
+  .infopanel .desc { font-size: .9em; margin: 8px 0 4px; }
+  .infopanel table {
+    border-collapse: collapse; width: 100%; font-size: .82em;
+    margin-top: 8px;
+  }
+  .infopanel td {
+    padding: 6px 0; border-top: 1px solid var(--line);
+    vertical-align: top;
+  }
+  .infopanel td.k {
+    color: var(--text-muted); width: 7em; padding-right: 10px;
+    text-transform: uppercase; letter-spacing: .08em; font-size: .9em;
+  }
+
   /* ---------- salon: museum-wall editorial -------------------------
      Grid masthead (text left, framed portrait right), a "wall" hero
      with museum label, transparent cards with catalogue captions. */
@@ -363,14 +389,27 @@
     border: 1px solid var(--line); background: var(--surface);
     padding: 22px; max-height: 68vh; object-fit: contain;
   }
+  body[data-template="salon"] .hero .infopanel {
+    max-width: 460px; margin: 14px auto 0;
+  }
   body[data-template="salon"] .work { background: none; box-shadow: none; }
-  body[data-template="salon"] .work img {
-    aspect-ratio: auto; border: 1px solid var(--line);
+  /* The card IS one frame: image above, info panel below, one border. */
+  body[data-template="salon"] .work .frame {
+    border: 1px solid var(--line); background: var(--surface);
+    padding: 14px;
   }
-  body[data-template="salon"] .work .cap { padding: 10px 2px 0; }
-  body[data-template="salon"] .work .cap .t {
-    font-style: italic; font-weight: 400;
+  body[data-template="salon"] .work .frame > img {
+    aspect-ratio: auto; display: block; width: 100%;
   }
+  body[data-template="salon"] .work .infopanel {
+    margin-top: 12px; padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  body[data-template="salon"] .work .infopanel .t {
+    font-family: var(--font-heading); font-style: italic;
+    font-size: 1.12em; font-weight: 400;
+  }
+  body[data-template="salon"] .work .infopanel .pill { margin-top: 10px; }
   .herostatus {
     display: inline-block; margin-top: 8px; padding: 2px 12px;
     border: 1px solid var(--accent); color: var(--accent);
@@ -437,21 +476,25 @@
   }
   .dossier {
     display: grid; grid-template-columns: 52px 1fr auto; gap: 16px;
-    align-items: baseline; margin-top: 14px; padding-bottom: 14px;
-    border-bottom: 1px solid var(--line);
+    align-items: start; margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--line);
   }
   .dossier .no {
     font-family: var(--font-heading); font-style: italic;
     font-size: 1.35em; color: var(--accent);
   }
   .dossier .t { font-family: var(--font-heading); font-size: 1.2em; }
-  .dossier .specs { margin-top: 2px; font-size: .82em; color: var(--text-muted); }
   .pill {
+    display: inline-block;
     font-size: .7em; letter-spacing: .12em; text-transform: uppercase;
     color: var(--accent); border: 1px solid var(--accent);
     padding: 3px 12px; border-radius: 999px; white-space: nowrap;
   }
   .pill.muted { color: var(--text-muted); border-color: var(--line); }
+  @media (max-width: 520px) {
+    .dossier { grid-template-columns: 40px 1fr; }
+    .dossier .pill { grid-column: 2; justify-self: start; margin-top: 10px; }
+  }
   body[data-template="studioWall"] footer { grid-column: 2; text-align: left; padding-left: 44px; }
   @media (max-width: 860px) {
     body[data-template="studioWall"] { display: block; }
@@ -512,6 +555,7 @@
     color: var(--text-muted); font-size: .84em; text-align: right;
   }
   body[data-template="nocturne"] .meta .specs .status { color: var(--accent); }
+  body[data-template="nocturne"] .work .infopanel { margin-top: 6px; }
   body[data-template="nocturne"] footer { letter-spacing: .22em; font-size: .72em; }
   @media (max-width: 640px) {
     body[data-template="nocturne"] .meta { flex-direction: column; }
@@ -574,16 +618,6 @@
   body[data-template="folio"] .work .spec .t {
     font-family: var(--font-heading); font-weight: 800; font-size: 1.35em;
     text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.05;
-  }
-  body[data-template="folio"] .work .spec table {
-    margin-top: 12px; border-collapse: collapse; width: 100%; font-size: .78em;
-  }
-  body[data-template="folio"] .work .spec td {
-    padding: 6px 0; border-top: 1px solid var(--line); vertical-align: top;
-  }
-  body[data-template="folio"] .work .spec td.k {
-    color: var(--text-muted); width: 6em; padding-right: 10px;
-    text-transform: uppercase; letter-spacing: .1em; font-size: .9em;
   }
   .stamp {
     display: inline-block; margin-top: 12px; padding: 4px 12px;
@@ -694,18 +728,39 @@
   }
 
   /* ---------- grid ---------- */
-  /* "medium · dimensions · year", skipping empties (v4 catalogue line). */
-  function specLine(w) {
-    var parts = [];
-    if (w.medium) parts.push(w.medium);
-    if (w.dimensions) parts.push(w.dimensions);
-    if (w.year) parts.push(w.year);
-    return parts.join(" \u00b7 ");
-  }
-
   /* Statuses that get the quiet (outline) treatment, not the loud one. */
   function isQuietStatus(status) {
     return /nfs|not for sale|sold/i.test(status || "");
+  }
+
+  /* The full per-artwork info panel (2026-10): the public description
+     plus a spec table of EVERY user-supplied field. Status stays out of
+     the table — it renders as a visual chip (pill/stamp) per template.
+     Returns null when the work carries no info at all. */
+  function infoTable(w) {
+    var table = document.createElement("table");
+    function row(k, v) {
+      if (v === undefined || v === null || v === "") return;
+      var tr = document.createElement("tr");
+      tr.appendChild(el("td", "k", k));
+      tr.appendChild(el("td", null, v));
+      table.appendChild(tr);
+    }
+    row("Year", w.year);
+    row("Medium", w.medium);
+    row("Dimensions", w.dimensions);
+    row("Technique", w.technique);
+    row("Series", w.series);
+    row("Price", w.price);
+    return table.children.length ? table : null;
+  }
+
+  function infoPanel(w) {
+    var panel = el("div", "infopanel");
+    if (w.description) panel.appendChild(el("p", "desc", w.description));
+    var table = infoTable(w);
+    if (table) panel.appendChild(table);
+    return panel.children.length ? panel : null;
   }
 
   /* Builds one card; `num` (1-based) is used by the numbered templates. */
@@ -740,73 +795,81 @@
       return img;
     }
 
-    /* studioWall: framed art + numbered dossier (no · title/specs · pill). */
+    /* salon: one frame — image above, full info panel below. */
+    if (t === "salon") {
+      var sFrame = el("div", "frame");
+      sFrame.appendChild(thumb());
+      var sPanel = el("div", "infopanel");
+      sPanel.appendChild(el("div", "t", w.title || ""));
+      if (w.description) sPanel.appendChild(el("p", "desc", w.description));
+      var sTable = infoTable(w);
+      if (sTable) sPanel.appendChild(sTable);
+      if (w.status) {
+        sPanel.appendChild(el("span",
+          "pill" + (isQuietStatus(w.status) ? " muted" : ""), w.status));
+      }
+      sFrame.appendChild(sPanel);
+      card.appendChild(sFrame);
+      card.addEventListener("click", function () {
+        location.hash = "#/work/" + encodeURIComponent(w.id);
+      });
+      return card;
+    }
+
+    /* studioWall: framed art with the numbered dossier INSIDE the same
+       frame (no · title + full info panel · status pill). */
     if (t === "studioWall") {
       var art = el("div", "art");
       art.appendChild(plateImg());
-      card.appendChild(art);
       var dossier = el("div", "dossier");
       dossier.appendChild(el("div", "no", (num < 10 ? "0" : "") + num));
       var mid = el("div");
       mid.appendChild(el("div", "t", w.title || ""));
-      var dline = specLine(w);
-      if (dline) mid.appendChild(el("div", "specs", dline));
+      var dPanel = infoPanel(w);
+      if (dPanel) mid.appendChild(dPanel);
       dossier.appendChild(mid);
       if (w.status) {
         dossier.appendChild(el("span",
           "pill" + (isQuietStatus(w.status) ? " muted" : ""), w.status));
       }
-      card.appendChild(dossier);
+      art.appendChild(dossier);
+      card.appendChild(art);
       card.addEventListener("click", function () {
         location.hash = "#/work/" + encodeURIComponent(w.id);
       });
       return card;
     }
 
-    /* nocturne: dark frame + title left, specs (and brass status) right. */
+    /* nocturne: dark frame holding image + title row + full info panel. */
     if (t === "nocturne") {
       var frame = el("div", "frame");
       frame.appendChild(plateImg());
-      card.appendChild(frame);
       var nmeta = el("div", "meta");
       nmeta.appendChild(el("div", "t", w.title || ""));
       var nspecs = el("div", "specs");
-      var nline = specLine(w);
-      if (nline) {
-        nspecs.appendChild(document.createTextNode(
-          nline + (w.status ? " \u00b7 " : "")));
-      }
       if (w.status) nspecs.appendChild(el("span", "status", w.status));
       nmeta.appendChild(nspecs);
-      card.appendChild(nmeta);
+      frame.appendChild(nmeta);
+      var nPanel = infoPanel(w);
+      if (nPanel) frame.appendChild(nPanel);
+      card.appendChild(frame);
       card.addEventListener("click", function () {
         location.hash = "#/work/" + encodeURIComponent(w.id);
       });
       return card;
     }
 
-    /* folio: index number · art · spec table (medium/size/year) + stamp. */
+    /* folio: index number · art · full spec panel + stamp. */
     if (isFolio) {
       card.appendChild(el("div", "idx", (num < 10 ? "0" : "") + num));
       var fArt = el("div", "art");
       fArt.appendChild(plateImg());
       card.appendChild(fArt);
-      var spec = el("div", "spec");
+      var spec = el("div", "spec infopanel");
       spec.appendChild(el("div", "t", w.title || ""));
-      var table = document.createElement("table");
-      (function () {
-        function frow(k, v) {
-          if (v === undefined || v === null || v === "") return;
-          var tr = document.createElement("tr");
-          tr.appendChild(el("td", "k", k));
-          tr.appendChild(el("td", null, v));
-          table.appendChild(tr);
-        }
-        frow("Medium", w.medium);
-        frow("Size", w.dimensions);
-        frow("Year", w.year);
-      })();
-      if (table.children.length) spec.appendChild(table);
+      if (w.description) spec.appendChild(el("p", "desc", w.description));
+      var fTable = infoTable(w);
+      if (fTable) spec.appendChild(fTable);
       if (w.status) {
         spec.appendChild(el("span",
           "stamp" + (isQuietStatus(w.status) ? " muted" : ""), w.status));
@@ -826,11 +889,6 @@
     if (isIndex || t === "atelier") {
       /* catalogue caption: medium · year */
       if (meta.length) cap.appendChild(el("div", "y", meta.join(" \u00b7 ")));
-    } else if (t === "salon") {
-      /* museum label: medium · dimensions · year · status */
-      var sline = specLine(w);
-      if (w.status) sline = sline ? sline + " \u00b7 " + w.status : w.status;
-      if (sline) cap.appendChild(el("div", "y", sline));
     } else if (w.year) {
       cap.appendChild(el("div", "y", w.year));
     }
@@ -892,6 +950,13 @@
           hc.appendChild(el("span", "herostatus", hero.status));
         }
         fig.appendChild(hc);
+        /* salon: the hero work is excluded from the grid, so it must
+           carry the full info panel here — every work shows every
+           user-supplied field (2026-10). */
+        if (template() === "salon") {
+          var hPanel = infoPanel(hero);
+          if (hPanel) fig.appendChild(hPanel);
+        }
         fig.addEventListener("click", function () {
           location.hash = "#/work/" + encodeURIComponent(hero.id);
         });
