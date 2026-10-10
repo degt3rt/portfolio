@@ -353,6 +353,14 @@
     text-transform: uppercase; letter-spacing: .08em; font-size: .9em;
   }
 
+  /* Featured mark — visible on EVERY v2 template (2026-10): toggling
+     "Feature this work" must show an immediate effect on the site, not
+     only on hero-bearing templates. */
+  .infopanel .pill + .pill { margin-left: 6px; }
+  .stamp.feat { background: var(--accent); }
+  .stamp + .stamp { margin-left: 6px; }
+  body[data-template="nocturne"] .meta .specs .feat { color: var(--accent); }
+
   /* ---------- salon: museum-wall editorial -------------------------
      Grid masthead (text left, framed portrait right), a "wall" hero
      with museum label, transparent cards with catalogue captions. */
@@ -393,13 +401,16 @@
     max-width: 460px; margin: 14px auto 0;
   }
   body[data-template="salon"] .work { background: none; box-shadow: none; }
-  /* The card IS one frame: image above, info panel below, one border. */
+  /* The card IS one frame: image above, info panel below, one border.
+     Every listing image sits in the SAME 4:3 matte (2026-10 user
+     decision): contain, never crop — smaller works leave more matte,
+     exactly like a real gallery frame. */
   body[data-template="salon"] .work .frame {
     border: 1px solid var(--line); background: var(--surface);
     padding: 14px;
   }
   body[data-template="salon"] .work .frame > img {
-    aspect-ratio: auto; display: block; width: 100%;
+    aspect-ratio: 4/3; object-fit: contain; display: block; width: 100%;
   }
   body[data-template="salon"] .work .infopanel {
     margin-top: 12px; padding-top: 10px;
@@ -422,7 +433,12 @@
   }
   @media (max-width: 720px) {
     body[data-template="salon"] header { grid-template-columns: 1fr; }
-    body[data-template="salon"] header .avatar { grid-column: 1; max-width: 180px; }
+    /* Both cells were grid-row: 1 — collapsing the column without
+       re-stacking the rows overlapped the photo and the name (2026-10). */
+    body[data-template="salon"] header .avatar {
+      grid-column: 1; grid-row: 1; max-width: 180px;
+    }
+    body[data-template="salon"] header .headbody { grid-column: 1; grid-row: 2; }
   }
 
   /* ---------- studioWall: monograph rail + dossiers ----------------
@@ -472,7 +488,7 @@
     background: var(--surface); border: 1px solid var(--line); padding: 20px;
   }
   body[data-template="studioWall"] .work .art img {
-    aspect-ratio: auto; max-height: 72vh; object-fit: contain;
+    aspect-ratio: 4/3; object-fit: contain; /* uniform matte frame */
   }
   .dossier {
     display: grid; grid-template-columns: 52px 1fr auto; gap: 16px;
@@ -542,7 +558,7 @@
     background: var(--surface); border: 1px solid var(--line); padding: 18px;
   }
   body[data-template="nocturne"] .work .frame img {
-    aspect-ratio: auto; max-height: 72vh; object-fit: contain;
+    aspect-ratio: 4/3; object-fit: contain; /* uniform matte frame */
   }
   body[data-template="nocturne"] .meta {
     display: flex; justify-content: space-between; align-items: baseline;
@@ -610,7 +626,7 @@
   }
   body[data-template="folio"] .work .art { padding: 20px; background: var(--surface); }
   body[data-template="folio"] .work .art img {
-    aspect-ratio: auto; max-height: 56vh; object-fit: contain;
+    aspect-ratio: 4/3; object-fit: contain; /* uniform matte frame */
   }
   body[data-template="folio"] .work .spec {
     border-left: 1px solid var(--text); padding: 20px 18px; text-align: left;
@@ -629,7 +645,11 @@
   body[data-template="folio"] footer { text-transform: uppercase; letter-spacing: .14em; font-size: .74em; }
   @media (max-width: 900px) {
     body[data-template="folio"] header { grid-template-columns: 1fr; }
-    body[data-template="folio"] header .avatar { grid-column: 1; max-width: 180px; }
+    /* Same overlap fix as salon: re-stack the rows, not just the column. */
+    body[data-template="folio"] header .avatar {
+      grid-column: 1; grid-row: 1; max-width: 180px;
+    }
+    body[data-template="folio"] header .headbody { grid-column: 1; grid-row: 2; }
     body[data-template="folio"] .work.row { grid-template-columns: 56px 1fr; }
     body[data-template="folio"] .work .spec {
       grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--text);
@@ -804,6 +824,9 @@
       if (w.description) sPanel.appendChild(el("p", "desc", w.description));
       var sTable = infoTable(w);
       if (sTable) sPanel.appendChild(sTable);
+      if (w.featured === true) {
+        sPanel.appendChild(el("span", "pill feat", "\u2726 Featured"));
+      }
       if (w.status) {
         sPanel.appendChild(el("span",
           "pill" + (isQuietStatus(w.status) ? " muted" : ""), w.status));
@@ -825,6 +848,9 @@
       dossier.appendChild(el("div", "no", (num < 10 ? "0" : "") + num));
       var mid = el("div");
       mid.appendChild(el("div", "t", w.title || ""));
+      if (w.featured === true) {
+        mid.appendChild(el("span", "pill feat", "\u2726 Featured"));
+      }
       var dPanel = infoPanel(w);
       if (dPanel) mid.appendChild(dPanel);
       dossier.appendChild(mid);
@@ -847,6 +873,10 @@
       var nmeta = el("div", "meta");
       nmeta.appendChild(el("div", "t", w.title || ""));
       var nspecs = el("div", "specs");
+      if (w.featured === true) {
+        nspecs.appendChild(el("span", "feat", "\u2726 Featured"));
+        if (w.status) nspecs.appendChild(document.createTextNode(" \u00b7 "));
+      }
       if (w.status) nspecs.appendChild(el("span", "status", w.status));
       nmeta.appendChild(nspecs);
       frame.appendChild(nmeta);
@@ -870,6 +900,9 @@
       if (w.description) spec.appendChild(el("p", "desc", w.description));
       var fTable = infoTable(w);
       if (fTable) spec.appendChild(fTable);
+      if (w.featured === true) {
+        spec.appendChild(el("span", "stamp feat", "\u2726 Featured"));
+      }
       if (w.status) {
         spec.appendChild(el("span",
           "stamp" + (isQuietStatus(w.status) ? " muted" : ""), w.status));
