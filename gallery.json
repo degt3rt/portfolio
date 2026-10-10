@@ -1,10 +1,15 @@
 {
-  "generatedAt": 1791632674548,
+  "generatedAt": 1791632890204,
   "artist": {
     "name": "Aaru Art Gallery",
     "bio": "I am a child Artist.",
     "avatar": true,
-    "links": []
+    "links": [
+      {
+        "label": "YouTube",
+        "url": "https://youtube.com/aaruartgallary"
+      }
+    ]
   },
   "layout": {
     "grid": "uniformSquare",
