@@ -1,5 +1,5 @@
 {
-  "generatedAt": 1791632328517,
+  "generatedAt": 1791632674548,
   "artist": {
     "name": "Aaru Art Gallery",
     "bio": "I am a child Artist.",
@@ -10,9 +10,9 @@
     "grid": "uniformSquare",
     "caption": "below",
     "detail": "sideBySide",
-    "header": "leftAligned",
+    "header": "centered",
     "titlecase": "asIs",
-    "template": "salon"
+    "template": "nocturne"
   },
   "works": [
     {
