@@ -1,5 +1,5 @@
 {
-  "generatedAt": 1791303662654,
+  "generatedAt": 1791626547980,
   "artist": {
     "name": "Aaru Art Gallery",
     "bio": "",
@@ -85,6 +85,16 @@
         }
       ],
       "year": 2025
+    },
+    {
+      "id": "204720af-79a8-467c-b4bc-181adf9a1c99",
+      "title": "Dreams",
+      "images": [
+        {
+          "id": "0e01eee1-3a40-45af-87ce-8612705125b0"
+        }
+      ],
+      "year": 2026
     }
   ],
   "events": [],
