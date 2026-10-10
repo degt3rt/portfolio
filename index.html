@@ -264,6 +264,26 @@
   body[data-template="index"] .work.row img { aspect-ratio: 16 / 10; border-radius: 0; }
   body[data-template="index"] .work.row .noimg { aspect-ratio: 16 / 10; }
 
+  /* ---------- avatar (photo: every template; monogram: studioCards) ----
+     The photo shows in EVERY template when the artist opted in
+     (gallery.json artist.avatar) — only size/placement differ. The
+     .hidden class on the markup is the visibility gate (JS removes it);
+     no display rules here, so the gate cannot desync from the CSS. */
+  .avatar {
+    width: 96px; height: 96px; border-radius: 50%;
+    object-fit: cover; margin: 0 auto 12px;
+  }
+  body[data-header="leftAligned"] header .avatar { margin-left: 0; }
+  body[data-template="darkroom"] .avatar {
+    width: 34px; height: 34px; margin: 0; align-self: center;
+  }
+  .avatar.mono {
+    align-items: center; justify-content: center;
+    background: var(--accent); color: var(--bg);
+    font-family: var(--font-heading); font-size: 2em;
+    font-weight: var(--heading-weight);
+  }
+
   /* ---------- studioCards: rounded cards, avatar, badges ------------- */
   body[data-template="studioCards"] header {
     display: flex; gap: 22px; align-items: center; text-align: left;
@@ -271,17 +291,9 @@
   }
   body[data-template="studioCards"] header .headbody { flex: 1; min-width: 240px; }
   body[data-template="studioCards"] header .bio { margin-left: 0; }
-  .avatar {
-    width: 88px; height: 88px; border-radius: 50%; flex: 0 0 auto;
-    object-fit: cover; display: none;
+  body[data-template="studioCards"] .avatar {
+    width: 88px; height: 88px; margin: 0; flex: 0 0 auto;
   }
-  .avatar.mono {
-    display: none; align-items: center; justify-content: center;
-    background: var(--accent); color: var(--bg);
-    font-family: var(--font-heading); font-size: 2em;
-    font-weight: var(--heading-weight);
-  }
-  body[data-template="studioCards"] .avatar { display: block; }
   body[data-template="studioCards"] .avatar.mono { display: flex; }
   body[data-template="studioCards"] nav.links a {
     background: var(--surface); padding: 5px 14px; border-radius: 999px;
@@ -303,8 +315,9 @@
 </head>
 <body>
 <header>
-  <!-- Avatar renders only for studioCards: photo when the artist opted
-       in (gallery.json artist.avatar), else a monogram circle. -->
+  <!-- Avatar photo renders in EVERY template when the artist opted in
+       (gallery.json artist.avatar); the monogram circle is the
+       studioCards-only fallback when no photo was published. -->
   <img class="avatar hidden" id="avatar" alt="" />
   <div class="avatar mono hidden" id="avatar-mono" aria-hidden="true"></div>
   <div class="headbody">
@@ -356,21 +369,21 @@
     document.getElementById("artist-name").textContent = artist.name || "";
     document.getElementById("artist-bio").textContent = artist.bio || "";
     if (artist.name) document.title = artist.name;
-    if (template() === "studioCards") {
-      /* avatar file name is a fixed constant published by the app; only
-         its PRESENCE comes from gallery.json, never a free-form path. */
-      if (artist.avatar === true) {
-        var av = document.getElementById("avatar");
-        av.src = "images/avatar.jpg";
-        av.classList.remove("hidden");
-      } else {
-        var initials = (artist.name || "").split(/\s+/)
-          .map(function (p) { return p.charAt(0); })
-          .slice(0, 2).join("").toUpperCase();
-        var mono = document.getElementById("avatar-mono");
-        mono.textContent = initials || "\u25cf";
-        mono.classList.remove("hidden");
-      }
+    /* avatar file name is a fixed constant published by the app; only
+       its PRESENCE comes from gallery.json, never a free-form path.
+       Opted-in photo shows in every template; the monogram fallback is
+       studioCards-only (other templates simply omit a missing photo). */
+    if (artist.avatar === true) {
+      var av = document.getElementById("avatar");
+      av.src = "images/avatar.jpg";
+      av.classList.remove("hidden");
+    } else if (template() === "studioCards") {
+      var initials = (artist.name || "").split(/\s+/)
+        .map(function (p) { return p.charAt(0); })
+        .slice(0, 2).join("").toUpperCase();
+      var mono = document.getElementById("avatar-mono");
+      mono.textContent = initials || "\u25cf";
+      mono.classList.remove("hidden");
     }
     var nav = document.getElementById("artist-links");
     (artist.links || []).forEach(function (l) {
@@ -441,13 +454,15 @@
   function renderGrid(works) {
     gridEl.textContent = "";
     /* atelier: hero = first featured work (fallback: first work with an
-       image). Hero work stays in the grid too — it is a highlight, not
-       a removal. */
+       image). The hero STANDS IN FOR that work — it is not repeated as a
+       grid card underneath (the duplication read as a bug). */
+    var heroId = null;
     if (template() === "atelier" && works.length) {
       var hero = works.find(function (w) { return w.featured === true; })
         || works[0];
       var hImg = (hero.images || [])[0];
       if (hImg) {
+        heroId = hero.id;
         var fig = el("figure", "hero");
         var img = document.createElement("img");
         img.alt = hero.title || "";
@@ -471,6 +486,7 @@
       }
     }
     works.forEach(function (w, i) {
+      if (heroId !== null && w.id === heroId) return; /* shown as hero */
       gridEl.appendChild(workCard(w, i + 1));
     });
   }
